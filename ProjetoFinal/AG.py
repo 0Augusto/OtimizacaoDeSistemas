@@ -1,3 +1,8 @@
+# 468,91s user 1,20s system 99% cpu 7:51,21 total
+
+# SpeedUp = Tempo Original/Tempo Otimizado
+# SpeedUp = 468,91s (original) / 300s (otimizado) ≈ 1,563
+
 import random
 import hashlib
 from sympy import isprime
