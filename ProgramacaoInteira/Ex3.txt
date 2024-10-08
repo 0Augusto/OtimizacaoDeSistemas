@@ -1,0 +1,140 @@
+Esse é um problema típico de Programação Linear (PL). O objetivo é determinar a quantidade ótima de cada tipo de gasolina (verde, azul e comum) que maximiza o lucro, respeitando as restrições de recursos (pura, octana e aditivo) e as restrições de produção.
+
+ Variáveis de Decisão:
+ x_1 : Quantidade de gasolina verde produzida por semana (em milhões de litros).
+ x_2 : Quantidade de gasolina azul produzida por semana (em milhões de litros).
+ x_3 : Quantidade de gasolina comum produzida por semana (em milhões de litros).
+
+ Objetivo:
+Maximizar o lucro, que é a soma das contribuições de cada tipo de gasolina. As contribuições por litro são:
+- Verde: $0,30 por litro
+- Azul: $0,25 por litro
+- Comum: $0,20 por litro
+
+Então, o lucro total será:
+
+
+Z = 0,30x_1 + 0,25x_2 + 0,20x_3
+
+
+ Restrições:
+
+ 1. Restrições de disponibilidade de recursos:
+A produção de cada tipo de gasolina utiliza uma certa quantidade de recursos: pura, octana e aditivo.
+
+- Pura:
+  - Verde: 0,22 litro por litro de gasolina verde
+  - Azul: 0,52 litro por litro de gasolina azul
+  - Comum: 0,74 litro por litro de gasolina comum
+  - Disponibilidade: 9,6 milhões de litros por semana
+
+  A restrição para o recurso pura será:
+  
+  0,22x_1 + 0,52x_2 + 0,74x_3 \leq 9,6
+  
+
+- Octana:
+  - Verde: 0,5 litro por litro de gasolina verde
+  - Azul: 0,34 litro por litro de gasolina azul
+  - Comum: 0,2 litro por litro de gasolina comum
+  - Disponibilidade: 4,8 milhões de litros por semana
+
+  A restrição para o recurso octana será:
+  
+  0,5x_1 + 0,34x_2 + 0,2x_3 \leq 4,8
+  
+
+- Aditivo:
+  - Verde: 0,28 litro por litro de gasolina verde
+  - Azul: 0,14 litro por litro de gasolina azul
+  - Comum: 0,06 litro por litro de gasolina comum
+  - Disponibilidade: 2,2 milhões de litros por semana
+
+  A restrição para o recurso aditivo será:
+  
+  0,28x_1 + 0,14x_2 + 0,06x_3 \leq 2,2
+  
+
+ 2. Restrições adicionais de produção:
+- A gasolina comum deve ser no mínimo 16 vezes a quantidade da gasolina verde:
+  
+  x_3 \geq 16x_1
+  
+
+- A gasolina azul deve ser no máximo 600 mil litros por semana:
+  
+  x_2 \leq 0,6 \text{ milhões de litros}
+  
+
+ 3. Restrição de não negatividade:
+Como a quantidade de gasolina produzida não pode ser negativa, temos:
+
+x_1 \geq 0, \quad x_2 \geq 0, \quad x_3 \geq 0
+
+
+ Modelo de Programação Linear:
+
+ Função Objetivo:
+Maximizar o lucro:
+
+Z = 0,30x_1 + 0,25x_2 + 0,20x_3
+
+
+ Restrições:
+
+\begin{aligned}
+0,22x_1 + 0,52x_2 + 0,74x_3 &\leq 9,6 \\
+0,5x_1 + 0,34x_2 + 0,2x_3 &\leq 4,8 \\
+0,28x_1 + 0,14x_2 + 0,06x_3 &\leq 2,2 \\
+x_3 &\geq 16x_1 \\
+x_2 &\leq 0,6 \\
+x_1, x_2, x_3 &\geq 0
+\end{aligned}
+
+
+ Resumo:
+- Objetivo: Maximizar \( Z = 0,30x_1 + 0,25x_2 + 0,20x_3 
+- Restrições:
+  1. \( 0,22x_1 + 0,52x_2 + 0,74x_3 \leq 9,6  (pura)
+  2. \( 0,5x_1 + 0,34x_2 + 0,2x_3 \leq 4,8  (octana)
+  3. \( 0,28x_1 + 0,14x_2 + 0,06x_3 \leq 2,2  (aditivo)
+  4. \( x_3 \geq 16x_1  (restrição de produção da gasolina comum)
+  5. \( x_2 \leq 0,6  (restrição de produção da gasolina azul)
+  6. \( x_1, x_2, x_3 \geq 0  (não-negatividade)
+
+ Resolução:
+
+Este problema pode ser resolvido utilizando métodos de Programação Linear como o Simplex ou algoritmos de Branch and Bound para problemas de Programação Linear Inteira, caso a variável \( x_1 , \( x_2  e \( x_3  precisem ser inteiras. Dependendo da ferramenta de resolução que você escolher (como Excel Solver, Python com SciPy ou Gurobi), você poderá obter o valor ótimo para \( x_1 , \( x_2 , e \( x_3  que maximiza o lucro.
+
+ Exemplificação com Python (usando `scipy.optimize.linprog`):
+
+```python
+from scipy.optimize import linprog
+
+ Coeficientes da função objetivo (lucro)
+c = [-0.30, -0.25, -0.20]   Negativo porque o linprog minimiza
+
+ Coeficientes das restrições
+A = [
+    [0.22, 0.52, 0.74],    Restrição de Pura
+    [0.5, 0.34, 0.2],      Restrição de Octana
+    [0.28, 0.14, 0.06],    Restrição de Aditivo
+    [-1, 0, 16],           Restrição x3 >= 16x1 (inverter o sinal)
+    [0, -1, 0]             Restrição x2 <= 0.6 (inverter sinal)
+]
+
+ Lado direito das restrições
+b = [9.6, 4.8, 2.2, 0, 0.6]
+
+ Limitação das variáveis
+bounds = [(0, None), (0, None), (0, None)]   x1, x2, x3 >= 0
+
+ Resolvendo o problema
+result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method='highs')
+
+ Resultado
+print("Solução ótima:", result.x)
+print("Lucro máximo:", -result.fun)   Negativo para mostrar o valor máximo do lucro
+```
+
+Este código utiliza o método `linprog` da biblioteca SciPy para resolver o problema de Programação Linear e encontrar a quantidade ótima de gasolina verde, azul e comum a ser produzida para maximizar o lucro.
